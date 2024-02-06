@@ -584,8 +584,8 @@ def recon_nufft_3d(kdata, seq, shape=None, lambda_l2=0.01, lambda_tv=0, max_iter
     kdata= kdata.reshape(kdata.shape[0], -1)
     
     coords = k_traj_adc  / delta_k[:,None]
-    coords = coords[[1,0,2]] # Transpose X and Y coordinates
-
+    coords = coords[[2,1,0]] # Transpose Z, X and Y coordinates
+ 
     if shape is None:
         shape = (int(np.ceil(abs(coords[0]).max()))*2, int(np.ceil(abs(coords[1]).max()))*2, int(np.ceil(abs(coords[2]).max()))*2)
         print(f'Automatically detected matrix size: {shape}')
@@ -631,7 +631,7 @@ def animate(seq, dt=1e-3, plot_window=1e-2, time_range=None, fps=30, max_frames=
     ts = np.linspace(time_range[0], time_range[1], int(np.ceil((time_range[1] - time_range[0])/dt))+1)
 
     fig = plt.figure()
-
+    
     gs = GridSpec(7,2, figure=fig)
 
     ax_rf = fig.add_subplot(gs[0,:])
@@ -865,19 +865,15 @@ def animate(seq, dt=1e-3, plot_window=1e-2, time_range=None, fps=30, max_frames=
     ax_kspace2.text(0.5,0,'Kz ↑',horizontalalignment='center',verticalalignment='top',transform=ax_kspace2.transAxes)
     ax_kspace2.text(0.0,0.5,'Kx → ',verticalalignment='center',horizontalalignment='right',transform=ax_kspace2.transAxes)
 
+    plt.tight_layout()
+
     ani = animation.FuncAnimation(fig=fig, func=update, frames=frames, interval=1000/fps)
 
     if show:
         plt.show()
 
     if save_filename is not None:
-        if save_filename.endswith('.mp4'):
-            writer = animation.FFMpegWriter(fps=fps)
-        elif save_filename.endswith('.gif'):
-            writer = animation.PillowWriter(fps=fps)
-        else:
-            raise ValueError(f'Unknown extension for output filename: {save_filename}')
-        ani.save(save_filename, writer=writer)
+        ani.save(save_filename, fps=fps)
 
     if not show:
         plt.close()
@@ -893,12 +889,12 @@ def plot_nd(rec, complex=False, vmin=None, vmax=None):
         rec = rec.reshape(-1, *rec.shape[-3:])
 
     # Plot anything between 2D, 3D, and 4D matrices
-    if rec.ndim == 2:
+    if rec.ndim <= 2:
         im = rec
     elif rec.ndim == 3:
         if rec.shape[0] > 8:
             # Show up to 8 slices/contrasts
-            im = rec[np.floor(np.linspace(0,rec.shape[0]-1,8)).astype(int)]
+            rec = rec[np.floor(np.linspace(0,rec.shape[0]-1,8)).astype(int)]
 
         im = np.concatenate(rec, axis=1)
     elif rec.ndim == 4:
@@ -915,9 +911,17 @@ def plot_nd(rec, complex=False, vmin=None, vmax=None):
 
     plt.figure()
     
+    # In case of 1D data, just show a line plot
+    if im.ndim == 1:
+        if not complex:
+            plt.plot(abs(im))
+        else:
+            plt.plot(im.real)
+            plt.plot(im.imag)
+        return
+    
     if not complex:
         plt.imshow(abs(im), cmap=plt.get_cmap('gray'), vmin=vmin, vmax=vmax, origin='lower');
-
     else:
         if vmin is None:
             vmin = abs(im).min()
@@ -926,7 +930,7 @@ def plot_nd(rec, complex=False, vmin=None, vmax=None):
     
         phase_index = (np.angle(im) / np.pi + 1)/2
         colors = plt.get_cmap('hsv')(phase_index)
-        intensity = (abs(im) - vmin) / (vmax - vmin)
+        intensity = np.clip((abs(im) - vmin) / (vmax - vmin), 0, 1)
         rgb = np.clip(np.stack((intensity * colors[...,0], intensity * colors[...,1], intensity * colors[...,2])),0,1)
     
         plt.imshow(rgb.transpose(1,2,0), origin='lower')
