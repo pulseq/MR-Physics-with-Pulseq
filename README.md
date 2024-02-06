@@ -15,14 +15,14 @@ This repository contains all course materials including hands-on exercises as Py
 |-------|----------|---------------------------------------|-----------------------------------|
 |       |          |                                       |                                   |
 | 9:00  | 30       | Registration                          |                                   |
-|       |          | Block 1: Introduction                 |                                   |
+|       |          | **Block 1: Introduction**             |                                   |
 | 9:30  | 40       | MR-Physics introduction               | Michael Bock                      |
 | 10:10 | 30       | Pulseq Principles                     | Maxim Zaitsev                     |
 | 10:40 | 20       | Pulseq in Browser, Basic sequences    | Moritz Zaiß                       |
 |       |          |                                       |                                   |
-| 11:00 | 20       | Coffee break                          |                                   |
+| *11:00* | *20*       | *Coffee break*                          |                                   |
 |       |          |                                       |                                   |
-|       |          | Hands-on                              |                                   |
+|       |          | **Hands-on**                              |                                   |
 | 11:20 | 10       | Pulseq in Browser with simulator      | Moritz Zaiß                       |
 | 11:30 | 10       | Setup on own laptops                  | helpers team                      |
 | 11:40 | 40       | Sequences and exercises to Block 1    | Qingping Chen                     |
