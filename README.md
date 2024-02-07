@@ -10,7 +10,7 @@ Provided hands-on exercises and pulse sequence code snippets are in Python progr
 This repository contains all course materials including hands-on exercises as Python notebooks and necessary raw data to run these notebooks and slides of the presentations. The latter will be uploaded after the course.
 | directory | description |
 |-----------|-------------|
-| slides    | this directory will contain slides of all presentations in the PSF format, sorted by day/time (will be populated during or shortly after the event) |
+| slides    | this directory will contain slides of all presentations in the PDF format, sorted by day/time (will be populated during or shortly after the event) |
 | tutorials | contains subdirectories for topical exercises and code examples, sorted by the presentation order, along with the required MRI raw and/or simulated data | 
 | .../.../notebooks | (subdirectory under exercises) place for interactive Python notebooks |
 | .../.../data | (optional subdirectory under exercises) where appropriate, MRI raw data or simulated data to support provided notebooks |
